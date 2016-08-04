@@ -1,0 +1,22 @@
+{% load bootstrap3 %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+
+{% for lend in lends %}
+
+<table>
+    <td><a href="{% url 'borrow:lend_view' lend.pk %}">기기명:{{lend.machine}}
+    시간당 가격:{{lend.price_h}}
+    일당 가격:{{lend.price_d}}</a></td>
+    <td>게시자:{{lend.writer.last_name}}{{lend.writer.first_name}}</td>
+
+</table>
+
+{% endfor %}
+</body>
+</html>
