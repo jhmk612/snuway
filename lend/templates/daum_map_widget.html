@@ -3,6 +3,22 @@
 <head>
     <meta charset="utf-8">
     <title>키워드로 장소검색하고 목록으로 표출하기</title>
+    <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+  <link href="/static/bootstrap3/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/bootstrap3/css/font-awesome.css" rel="stylesheet" />
+
+  <link href="/static/assets/css/get-shit-done.css" rel="stylesheet" />
+    <link href="/static/assets/css/demo.css" rel="stylesheet" />
+
+    <!--     Font Awesome     -->
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
+
     <style>
 .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
 .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
@@ -49,10 +65,10 @@
     <div id="menu_wrap" class="bg_white">
         <div class="option">
             <div>
-                <form >
-                    키워드 : <input type="text" value="서울대학교" id="keyword" size="15">
-                    <input type="button" name='mybutton' value='검색하기' onclick="searchPlaces(); return true;">
-                </form>
+
+                    키워드 : <input type="text" value="" id="keyword" size="15">
+                    <button type="button" class="btn btn-info btn-fill btn-sm" name='mybutton' onclick="searchPlaces();" onsubmit="searchPlaces();">검색하기 (클릭!)</button>
+
             </div>
         </div>
         <hr>
@@ -65,6 +81,9 @@
 
 <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=492212d75d7c632d0c41684dc332b0b6&libraries=services"></script>
 <script>
+
+
+
 // 마커를 담을 배열입니다
 var markers = [];
 
@@ -76,6 +95,29 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 생성합니다
 var map = new daum.maps.Map(mapContainer, mapOption);
+
+var myMarker = new daum.maps.Marker({
+                position: new daum.maps.LatLng({{lat}}, {{lng}})
+                });
+
+                // 마커가 지도 위에 표시되도록 설정합니다
+                myMarker.setMap(map);
+                myMarker.setZIndex(7);
+                myMarker.setDraggable(true);
+                daum.maps.event.addListener(myMarker, 'dragend', function(){
+
+    var latlng = myMarker.getPosition();
+    var lat = latlng.getLat();
+    var lng = latlng.getLng();
+var position = new daum.maps.LatLng(lat, lng);
+    // marker.setPosition(new daum.maps.LatLng(lat, lng));
+    map.setCenter(position);
+
+    $("#id_latlng").val(lat + "," + lng);
+});
+
+
+
 
 // 장소 검색 객체를 생성합니다
 var ps = new daum.maps.services.Places();
@@ -91,10 +133,6 @@ function searchPlaces() {
 
     var keyword = document.getElementById('keyword').value;
 
-    if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
-        return false;
-    }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     ps.keywordSearch( keyword, placesSearchCB);
@@ -154,6 +192,8 @@ function displayPlaces(places) {
         // 해당 장소에 인포윈도우에 장소명을 표시합니다
         // mouseout 했을 때는 인포윈도우를 닫습니다
         (function(marker, title) {
+
+
             daum.maps.event.addListener(marker, 'mouseover', function() {
                 displayInfowindow(marker, title);
             });
@@ -162,54 +202,80 @@ function displayPlaces(places) {
                 infowindow.close();
             });
 
-            itemEl.onmouseover =  function () {
-                displayInfowindow(marker, title);
-            };
+
 
             itemEl.onclick = function() {
+
+
                 var latlng = marker.getPosition();
             var lat = latlng.getLat();
             var lng = latlng.getLng();
             var position = new daum.maps.LatLng(lat, lng);
 
+
             map.setCenter(position);
             map.setLevel(3);
+            $("#id_latlng").val(lat + "," + lng);
+
+
+
+            myMarker.setPosition(latlng);
+
+                // 마커가 지도 위에 표시되도록 설정합니다
+                myMarker.setMap(map);
+
+
+                // 마커가 드래그 가능하도록 설정합니다
+                myMarker.setDraggable(true);
+
+
+
             }
 
-            itemEl.onmouseout =  function () {
-                infowindow.close();
-            };
+
 
             daum.maps.event.addListener(marker, 'click', function() {
-            console.log('dragend');
+
 
             var latlng = marker.getPosition();
             var lat = latlng.getLat();
             var lng = latlng.getLng();
             var position = new daum.maps.LatLng(lat, lng);
 
+
             map.setCenter(position);
             map.setLevel(3);
-
-
-            var myMarker = new daum.maps.Marker({
-            position: position
-            });
-
-        // 마커가 지도 위에 표시되도록 설정합니다
-            myMarker.setMap(map);
-
-            myMarker.setDraggable(true)
-            });
+            $("#id_latlng").val(lat + "," + lng);
 
 
 
+            myMarker.setPosition(position)
+
+
+                // 마커가 지도 위에 표시되도록 설정합니다
+                myMarker.setMap(map);
+
+                // 마커가 드래그 가능하도록 설정합니다
 
 
 
 
 
-        })(marker, places[i].title);
+
+
+
+
+
+
+        });
+
+
+
+        })
+
+
+
+        (marker, places[i].title);
 
         fragment.appendChild(itemEl);
     }
@@ -224,6 +290,11 @@ function displayPlaces(places) {
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
     map.setBounds(bounds);
 }
+
+
+
+
+
 
 // 검색결과 항목을 Element로 반환하는 함수입니다
 function getListItem(index, places) {
@@ -337,4 +408,15 @@ function removeAllChildNods(el) {
 
 </script>
 </body>
+ <script src="/static/jquery/jquery-1.10.2.js" type="text/javascript"></script>
+  <script src="/static/assets/js/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>
+
+  <script src="/static/bootstrap3/js/bootstrap.js" type="text/javascript"></script>
+  <script src="/static/assets/js/gsdk-checkbox.js"></script>
+  <script src="/static/assets/js/gsdk-radio.js"></script>
+  <script src="/static/assets/js/gsdk-bootstrapswitch.js"></script>
+  <script src="/static/assets/js/get-shit-done.js"></script>
+
+    <script src="/static/assets/js/custom.js"></script>
+
 </html>

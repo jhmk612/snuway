@@ -32,15 +32,18 @@ marker.setMap(map);
 <table>
 <tr>
 <td>{{comment.writer.last_name}}{{comment.writer.first_name}}</td>
+</tr>
+<tr>
 <td>{{comment.content}}</td>
 {% if request.user == comment.writer %}
 <td><button class='btn btn-primary'><a href="{% url 'borrow:edit_comment' pk=detail.pk id=comment.pk %}">답글 수정하기</a></button></td>
+<td><button><a href="{% url 'borrow:delete_comment' pk=detail.pk id=comment.pk %}">삭제</a></button></td>
 {% endif %}
 {% endfor %}
 </tr>
 </table>
 
-<form method="post">
+<form action='' method="post">
 {% csrf_token %}
 {% bootstrap_form form%}
 

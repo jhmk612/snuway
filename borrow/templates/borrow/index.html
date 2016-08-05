@@ -8,14 +8,21 @@
 
 
 {% for lend in lends %}
+<ul>
+<li>
 
-<table>
     <td><a href="{% url 'borrow:lend_view' lend.pk %}">기기명:{{lend.machine}}
     시간당 가격:{{lend.price_h}}
     일당 가격:{{lend.price_d}}</a></td>
     <td>게시자:{{lend.writer.last_name}}{{lend.writer.first_name}}</td>
+    {% if request.user == lend.writer %}
+    <td><button><a href="{% url 'borrow:lend_edit' lend.pk %}">수정하기</a></button></td>
+    <td><button>삭제하기</a></button></td>
+    {% endif %}
 
-</table>
+
+</li>
+</ul>
 
 {% endfor %}
 </body>

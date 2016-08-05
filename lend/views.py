@@ -7,11 +7,12 @@ from django.contrib.auth.models import User
 def newlend(request):
     if request.method=='POST':
         f=LenderForm(request.POST)
-        new_lender=f.save(commit=False)
-        new_lender.writer=request.user
-        new_lender.save()
+        if f.is_valid():
+            new_lender=f.save(commit=False)
+            new_lender.writer=request.user
+            new_lender.save()
 
-        return redirect('borrow:lend_view', pk=detail.pk)
+            return redirect('borrow:lend_view', pk=new_lender.pk)
     else:
         f=LenderForm()
 

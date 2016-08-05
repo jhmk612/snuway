@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from lend.models import Lender
 from .models import Comment
 from .forms import CommentForm
+from lend.forms import LenderForm
 # Create your views here.
 
 
@@ -45,6 +46,26 @@ def edit_comment(request, pk, id):
 
     context={'detail':detail, 'comment':comment, 'form':c}
     return render(request, 'borrow/edit_comment.html', context)
+
+def delete_comment(request, pk, id):
+    detail=Lender.objects.get(pk=pk)
+    comment=Comment.objects.get(pk=id)
+    comment.delete()
+    return redirect('borrow:lend_view', pk=detail.pk)
+
+def lend_edit(request, pk):
+    lend=Lender.objects.get(pk=pk)
+    if request.method == 'POST':
+        l=LenderForm(request.POST, instance=lend)
+        ed_lend=l.save(commit=False)
+        ed_lend.writer=request.user
+        ed_lend.save()
+        return redirect('borrow:lendlist')
+    else:
+        l=LenderForm(instance=lend)
+
+    context={'lend':lend, 'form':l}
+    return render(request, 'borrow/edit_lend.html', context)
 
 """def new_comment(request):
     if request.method=='POST':
