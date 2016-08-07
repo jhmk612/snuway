@@ -50,9 +50,17 @@
 
     <div id="menu_wrap" class="bg_white">
         <div class="option">
+        <form method="get">
             {% bootstrap_form form %}
 
-<button type="submit" onsubmit="setBounds()">지도 범위 재설정 하기</button>
+            <input type="submit" value="검색">
+</form>
+<p>
+<button onclick="setBounds()">지도 범위 재설정 하기</button>
+</p>
+<p>
+<button onclick="location.href='{% url 'borrow:lendlist' %}';">검색 초기화</button>
+</p>
 </div>
         </div>
 

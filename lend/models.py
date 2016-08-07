@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Machine(models.Model):
+
     name=models.CharField(max_length=40)
     m_type=models.CharField(max_length=30)
     detail=models.ImageField(blank=True)
@@ -18,6 +19,7 @@ def price_validator(price):
 
 
 class Tag(models.Model):
+
     tag=models.CharField(max_length=20)
 
     def __str__(self):
@@ -32,7 +34,7 @@ class Lender(models.Model):
 
     calendar=models.IntegerField()
     writer=models.ForeignKey(User, default=1)
-    tags=models.ManyToManyField(Tag)
+    tags=models.ForeignKey(Tag, default=1)
 
     def lat(self):
         return self.latlng.split(',')[0]

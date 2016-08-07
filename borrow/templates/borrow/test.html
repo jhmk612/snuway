@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load bootstrap3 %}
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+{% for lend in lends %}
+{{lend.machine}}
+{%endfor%}
+<form method="get">
+    {% bootstrap_form form %}
+    <input type="submit" name="">
+</form>
+
+</body>
+</html>
+

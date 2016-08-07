@@ -11,18 +11,9 @@ def lend_list(request):
     if request.method=='GET':
         s=SearchForm(request.GET)
 
-
-
-
-    return render(request, 'borrow/index.html', {'lends':lends, 'form':s})
-
-def lend_search(request):
-    if request.method=='GET':
-        lends=Lender.objects.all()
-
         machine=request.GET.get('machine', None)
         if machine:
-            lends=lends.filter(model=model)
+            lends=lends.filter(machine=machine)
 
         location=request.GET.get('location', None)
         if location:
@@ -30,21 +21,20 @@ def lend_search(request):
 
         price=request.GET.get('price', None)
         if price:
-            lends=lends.filter(price_h__lte=price)
+            lends=lends.filter(price_h__gte=price)
 
         date=request.GET.get('date', None)
         if date:
             lends=lends.filter(calendar=date)
 
-        return render('borrow/index.html', lends)
 
 
 
 
 
+    return render(request, 'borrow/index.html', {'lends':lends, 'form':s})
 
 
-        return render(request, 'borrow/index.html', {'form':s})
 
 
 
