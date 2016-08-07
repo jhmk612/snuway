@@ -1,15 +1,52 @@
 from django.shortcuts import render, redirect
 from lend.models import Lender
 from .models import Comment
-from .forms import CommentForm
+from .forms import CommentForm, SearchForm
 from lend.forms import LenderForm
 # Create your views here.
 
 
 def lend_list(request):
     lends=Lender.objects.all()
-    context={'lends':lends}
-    return render(request, 'borrow/index.html', context)
+    if request.method=='GET':
+        s=SearchForm(request.GET)
+
+
+
+
+    return render(request, 'borrow/index.html', {'lends':lends, 'form':s})
+
+def lend_search(request):
+    if request.method=='GET':
+        lends=Lender.objects.all()
+
+        machine=request.GET.get('machine', None)
+        if machine:
+            lends=lends.filter(model=model)
+
+        location=request.GET.get('location', None)
+        if location:
+            lends=lends.filter(tags=location)
+
+        price=request.GET.get('price', None)
+        if price:
+            lends=lends.filter(price_h__lte=price)
+
+        date=request.GET.get('date', None)
+        if date:
+            lends=lends.filter(calendar=date)
+
+        return render('borrow/index.html', lends)
+
+
+
+
+
+
+
+        return render(request, 'borrow/index.html', {'form':s})
+
+
 
 def lend_view(request, pk):
     detail=Lender.objects.get(pk=pk)
